@@ -1,2 +1,2 @@
 # LanguageDictionary
-Dictionary for repeating foreign words
+Vocabulary for repeating foreign words
