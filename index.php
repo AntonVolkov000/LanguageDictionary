@@ -1,3 +1,23 @@
+<?php
+require_once('Controller.php');
+
+const TO_RUSSIAN = 0;
+const WORDS = 0;
+const LEARNED = 0;
+
+$controller = new Controller;
+$controller->connectDB();
+$state = $controller->getState();
+if (empty($state))
+{
+    $controller->initState();
+}
+//$controller->addLanguage("English");
+//$controller->deleteLanguage(3);
+$languages = $controller->getLanguages();
+//print_r($languages)
+print_r($state)
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,230 +29,294 @@
     <script type="text/javascript" src="js/main.js"></script>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <div class="language-button-block">
-                <button class="header-button language-button">
-                    <span class="selected_language" data="english">English</span>
-                </button>
-                <div class="other_languages">
-                    <button class="other_language language-button" data="russian">Russian</button>
-                    <button class="other_language language-button" data="add">Add language</button>
+    <div class="content-main">
+        <div class="container">
+            <header>
+                <div class="language-button-block">
+                    <?php if ($languages->num_rows != 0): ?>
+                        <button class="header-button language-button">English</button>
+                        <div class="other_languages">
+                            <button class="language-button">Russian</button>
+                            <button id="addLanguage" class="language-button">Add language</button>
+                        </div>
+                    <?php else: ?>
+                        <button id="addLanguage" class="header-button language-button">Add language</button>
+                    <?php endif; ?>
                 </div>
-            </div>
-            <button class="header-button translation_type-button">
-                <span class="translation_type translation_type-0 active">
-                    <span>English</span>
-                    <span>to</span>
-                    <span>Russian</span>
-                </span>
-                <span class="translation_type translation_type-1">
-                    <span>Russian</span>
-                    <span>to</span>
-                    <span>English</span>
-                </span>
-            </button>
-            <button class="header-button random-button">
-                <span class="random">Random</span>
-            </button>
-            <button class="header-button content_type-button">
-                <span class="content_type content_type-0 active">Words</span>
-                <span class="content_type content_type-1">Stable expressions</span>
-            </button>
-            <button class="header-button learned_type-button">
-                <span class="learned_type learned_type-0 active">Unlearned</span>
-                <span class="learned_type learned_type-1">Learned</span>
-            </button>
-            <button class="header-button add-button">
-                Add
-            </button>
-        </header>
-        <div class="main">
-            <div class="content-button-container">
-                <button class="left-button content-button">
-                    <img src="images/left-arrow.png" alt="left-arrow">
+                <button class="header-button translation_type-button">
+                    <span class="translation_type translation_type-0 active">
+                        <span>English</span>
+                        <span>to</span>
+                        <span>Russian</span>
+                    </span>
+                    <span class="translation_type translation_type-1">
+                        <span>Russian</span>
+                        <span>to</span>
+                        <span>English</span>
+                    </span>
                 </button>
-            </div>
-            <div class="content">
-                <div class="column">
-                    <div class="text_name">11111</div>
-                    <div class="text_translation">22222</div>
-                    <div class="manager-container">
-                        <button class="manager">
-                            <img src="images/manager.png" alt="manager">
-                        </button>
-                        <div class="manager_block">
-                            <button class="add_to_learnd">add to learnd</button>
-                            <button class="change">change</button>
-                            <button class="delete">delete</button>
+                <button class="header-button random-button">
+                    <span class="random">Random</span>
+                </button>
+                <button class="header-button content_type-button">
+                    <span class="content_type content_type-0 active">Words</span>
+                    <span class="content_type content_type-1">Stable expressions</span>
+                </button>
+                <button class="header-button learned_type-button">
+                    <span class="learned_type learned_type-0 active">Unlearned</span>
+                    <span class="learned_type learned_type-1">Learned</span>
+                </button>
+                <button class="header-button add-button">
+                    Add
+                </button>
+            </header>
+            <div class="main">
+                <div class="content-button-container">
+                    <button class="left-button content-button">
+                        <img src="images/left-arrow.png" alt="left-arrow">
+                    </button>
+                </div>
+                <div class="content">
+
+                    <div class="column">
+                        <div class="text_name">11111</div>
+                        <div class="text_translation">22222</div>
+                        <div class="manager-container">
+                            <button class="manager">
+                                <img src="images/manager.png" alt="manager">
+                            </button>
+                            <div class="manager_block">
+                                <button class="add_to_learned">add to learned</button>
+                                <button class="change">change</button>
+                                <button class="delete">delete</button>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="column">
-                    <div class="text_name">11111</div>
-                    <div class="text_translation">22222</div>
-                    <div class="manager-container">
-                        <button class="manager">
-                            <img src="images/manager.png" alt="manager">
-                        </button>
-                        <div class="manager_block">
-                            <button class="add_to_learnd">add to learnd</button>
-                            <button class="change">change</button>
-                            <button class="delete">delete</button>
+                    <div class="column">
+                        <div class="text_name">11111</div>
+                        <div class="text_translation">22222</div>
+                        <div class="manager-container">
+                            <button class="manager">
+                                <img src="images/manager.png" alt="manager">
+                            </button>
+                            <div class="manager_block">
+                                <button class="add_to_learned">add to learned</button>
+                                <button class="change">change</button>
+                                <button class="delete">delete</button>
+                            </div>
                         </div>
                     </div>
+                    <div class="column">
+                        <div class="text_name">11111</div>
+                        <div class="text_translation">22222</div>
+                    </div>
+                    <div class="column">
+                        <div class="text_name">11111</div>
+                        <div class="text_translation">22222</div>
+                    </div>
+                    <div class="column">
+                        <div class="text_name">11111</div>
+                        <div class="text_translation">22222</div>
+                    </div>
+                    <div class="column">
+                        <div class="text_name">11111</div>
+                        <div class="text_translation">22222</div>
+                    </div>
+                    <div class="column">
+                        <div class="text_name">11111</div>
+                        <div class="text_translation">22222</div>
+                    </div>
+                    <div class="column">
+                        <div class="text_name">11111</div>
+                        <div class="text_translation">22222</div>
+                    </div>
+                    <div class="column">
+                        <div class="text_name">11111</div>
+                        <div class="text_translation">22222</div>
+                    </div>
+                    <div class="column">
+                        <div class="text_name">11111</div>
+                        <div class="text_translation">22222</div>
+                    </div>
+                    <div class="column">
+                        <div class="text_name">11111</div>
+                        <div class="text_translation">22222</div>
+                    </div>
+                    <div class="column">
+                        <div class="text_name">11111</div>
+                        <div class="text_translation">22222</div>
+                    </div>
+                    <div class="column">
+                        <div class="text_name">11111</div>
+                        <div class="text_translation">22222</div>
+                    </div>
+                    <div class="column">
+                        <div class="text_name">11111</div>
+                        <div class="text_translation">22222</div>
+                    </div>
+                    <div class="column">
+                        <div class="text_name">11111</div>
+                        <div class="text_translation">22222</div>
+                    </div>
+                    <div class="column">
+                        <div class="text_name">11111</div>
+                        <div class="text_translation">22222</div>
+                    </div>
+                    <div class="column">
+                        <div class="text_name">11111</div>
+                        <div class="text_translation">22222</div>
+                    </div>
+                    <div class="column">
+                        <div class="text_name">11111</div>
+                        <div class="text_translation">22222</div>
+                    </div>
+                    <div class="column">
+                        <div class="text_name">11111</div>
+                        <div class="text_translation">22222</div>
+                    </div>
+                    <div class="column">
+                        <div class="text_name">11111</div>
+                        <div class="text_translation">22222</div>
+                    </div>
+                    <div class="column">
+                        <div class="text_name">11111</div>
+                        <div class="text_translation">22222</div>
+                    </div>
+                    <div class="column">
+                        <div class="text_name">11111</div>
+                        <div class="text_translation">22222</div>
+                    </div>
+                    <div class="column">
+                        <div class="text_name">11111</div>
+                        <div class="text_translation">22222</div>
+                    </div>
+                    <div class="column">
+                        <div class="text_name">11111</div>
+                        <div class="text_translation">22222</div>
+                    </div>
+                    <div class="column">
+                        <div class="text_name">11111</div>
+                        <div class="text_translation">22222</div>
+                    </div>
+                    <div class="column">
+                        <div class="text_name">11111</div>
+                        <div class="text_translation">22222</div>
+                    </div>
+                    <div class="column">
+                        <div class="text_name">11111</div>
+                        <div class="text_translation">22222</div>
+                    </div>
+                    <div class="column">
+                        <div class="text_name">11111</div>
+                        <div class="text_translation">22222</div>
+                    </div>
+                    <div class="column">
+                        <div class="text_name">11111</div>
+                        <div class="text_translation">22222</div>
+                    </div>
+                    <div class="column">
+                        <div class="text_name">11111</div>
+                        <div class="text_translation">22222</div>
+                    </div>
+                    <div class="column">
+                        <div class="text_name">11111</div>
+                        <div class="text_translation">22222</div>
+                    </div>
+                    <div class="column">
+                        <div class="text_name">11111</div>
+                        <div class="text_translation">22222</div>
+                    </div>
+                    <div class="column">
+                        <div class="text_name">11111</div>
+                        <div class="text_translation">22222</div>
+                    </div>
+                    <div class="column">
+                        <div class="text_name">11111</div>
+                        <div class="text_translation">22222</div>
+                    </div>
+                    <div class="column">
+                        <div class="text_name">11111</div>
+                        <div class="text_translation">22222</div>
+                    </div>
+                    <div class="column">
+                        <div class="text_name">11111</div>
+                        <div class="text_translation">22222</div>
+                    </div>
+                    <div class="column">
+                        <div class="text_name">11111</div>
+                        <div class="text_translation">22222</div>
+                    </div>
+                    <div class="column">
+                        <div class="text_name">11111</div>
+                        <div class="text_translation">22222</div>
+                    </div>
                 </div>
-                <div class="column">
-                    <div class="text_name">11111</div>
-                    <div class="text_translation">22222</div>
+                <div class="content-button-container">
+                    <button class="right-button content-button">
+                        <img src="images/right-arrow.png" alt="right-arrow">
+                    </button>
                 </div>
-                <div class="column">
-                    <div class="text_name">11111</div>
-                    <div class="text_translation">22222</div>
-                </div>
-                <div class="column">
-                    <div class="text_name">11111</div>
-                    <div class="text_translation">22222</div>
-                </div>
-                <div class="column">
-                    <div class="text_name">11111</div>
-                    <div class="text_translation">22222</div>
-                </div>
-                <div class="column">
-                    <div class="text_name">11111</div>
-                    <div class="text_translation">22222</div>
-                </div>
-                <div class="column">
-                    <div class="text_name">11111</div>
-                    <div class="text_translation">22222</div>
-                </div>
-                <div class="column">
-                    <div class="text_name">11111</div>
-                    <div class="text_translation">22222</div>
-                </div>
-                <div class="column">
-                    <div class="text_name">11111</div>
-                    <div class="text_translation">22222</div>
-                </div>
-                <div class="column">
-                    <div class="text_name">11111</div>
-                    <div class="text_translation">22222</div>
-                </div>
-                <div class="column">
-                    <div class="text_name">11111</div>
-                    <div class="text_translation">22222</div>
-                </div>
-                <div class="column">
-                    <div class="text_name">11111</div>
-                    <div class="text_translation">22222</div>
-                </div>
-                <div class="column">
-                    <div class="text_name">11111</div>
-                    <div class="text_translation">22222</div>
-                </div>
-                <div class="column">
-                    <div class="text_name">11111</div>
-                    <div class="text_translation">22222</div>
-                </div>
-                <div class="column">
-                    <div class="text_name">11111</div>
-                    <div class="text_translation">22222</div>
-                </div>
-                <div class="column">
-                    <div class="text_name">11111</div>
-                    <div class="text_translation">22222</div>
-                </div>
-                <div class="column">
-                    <div class="text_name">11111</div>
-                    <div class="text_translation">22222</div>
-                </div>
-                <div class="column">
-                    <div class="text_name">11111</div>
-                    <div class="text_translation">22222</div>
-                </div>
-                <div class="column">
-                    <div class="text_name">11111</div>
-                    <div class="text_translation">22222</div>
-                </div>
-                <div class="column">
-                    <div class="text_name">11111</div>
-                    <div class="text_translation">22222</div>
-                </div>
-                <div class="column">
-                    <div class="text_name">11111</div>
-                    <div class="text_translation">22222</div>
-                </div>
-                <div class="column">
-                    <div class="text_name">11111</div>
-                    <div class="text_translation">22222</div>
-                </div>
-                <div class="column">
-                    <div class="text_name">11111</div>
-                    <div class="text_translation">22222</div>
-                </div>
-                <div class="column">
-                    <div class="text_name">11111</div>
-                    <div class="text_translation">22222</div>
-                </div>
-                <div class="column">
-                    <div class="text_name">11111</div>
-                    <div class="text_translation">22222</div>
-                </div>
-                <div class="column">
-                    <div class="text_name">11111</div>
-                    <div class="text_translation">22222</div>
-                </div>
-                <div class="column">
-                    <div class="text_name">11111</div>
-                    <div class="text_translation">22222</div>
-                </div>
-                <div class="column">
-                    <div class="text_name">11111</div>
-                    <div class="text_translation">22222</div>
-                </div>
-                <div class="column">
-                    <div class="text_name">11111</div>
-                    <div class="text_translation">22222</div>
-                </div>
-                <div class="column">
-                    <div class="text_name">11111</div>
-                    <div class="text_translation">22222</div>
-                </div>
-                <div class="column">
-                    <div class="text_name">11111</div>
-                    <div class="text_translation">22222</div>
-                </div>
-                <div class="column">
-                    <div class="text_name">11111</div>
-                    <div class="text_translation">22222</div>
-                </div>
-                <div class="column">
-                    <div class="text_name">11111</div>
-                    <div class="text_translation">22222</div>
-                </div>
-                <div class="column">
-                    <div class="text_name">11111</div>
-                    <div class="text_translation">22222</div>
-                </div>
-                <div class="column">
-                    <div class="text_name">11111</div>
-                    <div class="text_translation">22222</div>
-                </div>
-                <div class="column">
-                    <div class="text_name">11111</div>
-                    <div class="text_translation">22222</div>
-                </div>
-                <div class="column">
-                    <div class="text_name">11111</div>
-                    <div class="text_translation">22222</div>
-                </div>
-            </div>
-            <div class="content-button-container">
-                <button class="right-button content-button">
-                    <img src="images/right-arrow.png" alt="right-arrow">
-                </button>
             </div>
         </div>
     </div>
+    <form class="add-language_popapp popapp" action="" method="post">
+        <input type="button" name="close">
+        <label>
+            Word
+            <input type="text" name="word_name">
+        </label>
+        <input type="submit" value="add">
+    </form>
+    <?php if ($state['content_type'] == WORDS): ?>
+        <form class="add-word_popapp popapp" action="" method="post">
+            <input type="button" name="close">
+            <label>
+                Word
+                <input type="text" name="word_name">
+            </label>
+            <label>
+                Translation
+                <input type="text" name="word_translation">
+            </label>
+            <input type="submit" value="add">
+        </form>
+        <form class="change-word_popapp popapp" action="" method="post">
+            <input type="button" name="close">
+            <label>
+                Word
+                <input type="text" name="word_name">
+            </label>
+            <label>
+                Translation
+                <input type="text" name="word_translation">
+            </label>
+            <input type="submit" value="change">
+        </form>
+    <?php else: ?>
+        <form class="change_stable-expression_popapp popapp" action="" method="post">
+            <input type="button" name="close">
+            <label>
+                Stable expression
+                <textarea name="stable-expression_name"></textarea>
+            </label>
+            <label>
+                Translation
+                <textarea name="stable-expression_name"></textarea>
+            </label>
+            <input type="submit" value="change">
+        </form>
+        <form class="change-stable-expressions_popapp popapp" action="" method="post">
+            <input type="button" name="close">
+            <label>
+                Stable expression
+                <textarea name="stable-expression_name"></textarea>
+            </label>
+            <label>
+                Translation
+                <textarea name="stable-expression_name"></textarea>
+            </label>
+            <input type="submit" value="change">
+        </form>
+    <?php endif; ?>
 </body>
 </html>
