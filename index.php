@@ -16,7 +16,7 @@ if (empty($state))
 //$controller->deleteLanguage(3);
 $languages = $controller->getLanguages();
 //print_r($languages)
-print_r($state)
+//print_r($state)
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -259,63 +259,63 @@ print_r($state)
             </div>
         </div>
     </div>
-    <form class="add-language_popapp popapp" action="" method="post">
+    <form class="add-language_popup popup" action="" method="post" onsubmit="return false;">
         <input type="button" name="close">
         <label>
-            Word
+            <span>Language</span>
             <input type="text" name="word_name">
         </label>
-        <input type="submit" value="add">
+        <input type="submit" value="add" disabled>
     </form>
     <?php if ($state['content_type'] == WORDS): ?>
-        <form class="add-word_popapp popapp" action="" method="post">
+        <form class="add-word_popup popup" action="" method="post" onsubmit="return false;">
             <input type="button" name="close">
             <label>
-                Word
+                <span>Word</span>
                 <input type="text" name="word_name">
             </label>
             <label>
-                Translation
+                <span>Translation</span>
                 <input type="text" name="word_translation">
             </label>
-            <input type="submit" value="add">
+            <input type="submit" value="add" disabled>
         </form>
-        <form class="change-word_popapp popapp" action="" method="post">
+        <form class="change-word_popup popup" action="" method="post" onsubmit="return false;">
             <input type="button" name="close">
             <label>
-                Word
+                <span>Word</span>
                 <input type="text" name="word_name">
             </label>
             <label>
-                Translation
+                <span>Translation</span>
                 <input type="text" name="word_translation">
             </label>
-            <input type="submit" value="change">
+            <input type="submit" value="change" disabled>
         </form>
     <?php else: ?>
-        <form class="change_stable-expression_popapp popapp" action="" method="post">
+        <form class="add-stable_expression_popup popup" action="" method="post" onsubmit="return false;">
             <input type="button" name="close">
             <label>
-                Stable expression
-                <textarea name="stable-expression_name"></textarea>
+                <span>Stable expression</span>
+                <textarea name="stable_expression_name"></textarea>
             </label>
             <label>
-                Translation
-                <textarea name="stable-expression_name"></textarea>
+                <span>Translation</span>
+                <textarea name="stable_expression_translation"></textarea>
             </label>
-            <input type="submit" value="change">
+            <input type="submit" value="add" disabled>
         </form>
-        <form class="change-stable-expressions_popapp popapp" action="" method="post">
+        <form class="change-stable_expressions_popup popup" action="" method="post" onsubmit="return false;">
             <input type="button" name="close">
             <label>
-                Stable expression
-                <textarea name="stable-expression_name"></textarea>
+                <span>Stable expression</span>
+                <textarea name="stable_expression_name"></textarea>
             </label>
             <label>
-                Translation
-                <textarea name="stable-expression_name"></textarea>
+                <span>Translation</span>
+                <textarea name="stable_expression_translation"></textarea>
             </label>
-            <input type="submit" value="change">
+            <input type="submit" value="change" disabled>
         </form>
     <?php endif; ?>
 </body>

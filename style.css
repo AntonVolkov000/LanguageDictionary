@@ -182,7 +182,7 @@ header {
     right: -120px;
     opacity: 1;
 }
-.popapp {
+.popup {
     position: absolute;
     top: 42%;
     left: 42%;
@@ -193,8 +193,9 @@ header {
     border-radius: 10px;
     padding: 10px;
     opacity: 0;
+    transition-duration: .2s;
 }
-.popapp input[name="close"] {
+.popup input[name="close"] {
     width: 25px;
     height: 25px;
     align-self: flex-end;
@@ -203,41 +204,42 @@ header {
     border-radius: 8px;
     border: 0;
 }
-.popapp input[type="text"] {
+.popup input[type="text"] {
     width: 200px;
     height: 20px;
     border: 1px solid #cccccc;
     border-radius: 6px;
 }
-.popapp input[type="text"]:focus {
+.popup input[type="text"]:focus {
     outline: none;
 }
-.popapp textarea {
+.popup textarea {
     width: 250px;
     height: 50px;
     border: 1px solid #cccccc;
     border-radius: 6px;
 }
-.popapp textarea {
+.popup textarea {
     outline: none;
 }
-.popapp input[type="submit"] {
+.popup input[type="submit"] {
     width: 100px;
     height: 20px;
     border: 1px solid #cccccc;
     border-radius: 10px;
     align-self: center;
 }
-.popapp input, .popapp label {
+.popup input, .popup label {
     margin-top: 10px;
 }
-.popapp input:first-child, .popapp label:first-of-type {
+.popup input:first-child, .popup label:first-of-type {
     margin-top: 0;
 }
-.popapp label {
+.popup label {
     display: flex;
     flex-direction: column;
+    font: normal 16px sans-serif;
 }
-.popapp label input {
-    margin-top: 10px;
+.popup label input {
+    margin-top: 2px;
 }
