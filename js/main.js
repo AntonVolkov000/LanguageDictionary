@@ -1,10 +1,8 @@
 $(function() {
     //reset popup forms
-    $('.add-language_popup').trigger('reset');
-    $('.add-word_popup').trigger('reset');
-    $('.change-word_popup').trigger('reset');
-    $('.add-stable_expression_popup').trigger('reset');
-    $('.change-stable_expressions_popup').trigger('reset');
+    $('form.popup').trigger('reset');
+    $('input[type=submit]').prop('disabled', true);
+
 
     //processing of header buttons
     function activationSwitchOneElement(element) {
@@ -15,44 +13,20 @@ $(function() {
         }
     }
 
-    function activationSwitchTwoElements(element_1, element_2) {
-        if (element_1.hasClass('active')) {
-            element_1.removeClass('active');
-            element_2.addClass('active');
-        } else {
-            element_1.addClass('active');
-            element_2.removeClass('active');
-        }
-    }
-
     $('.language-button').on('click', function() {
         let other_languages = $('.other_languages');
         activationSwitchOneElement(other_languages);
     });
 
-    $('.translation_type-button').on('click', function() {
-        let translation_type_0 = $('.translation_type-0');
-        let translation_type_1 = $('.translation_type-1');
-        activationSwitchTwoElements(translation_type_0, translation_type_1);
-    });
+    // $('.translation_type-button').on('click', function() {});
 
-    // $('.random-button').on('click', function() {
-    // });
+    // $('.random-button').on('click', function() {});
 
-    $('.content_type-button').on('click', function() {
-        let content_type_0 = $('.content_type-0');
-        let content_type_1 = $('.content_type-1');
-        activationSwitchTwoElements(content_type_0, content_type_1);
-    });
+    // $('.content_type-button').on('click', function() {});
 
-    $('.learned_type-button').on('click', function() {
-        let learned_type_0 = $('.learned_type-0');
-        let learned_type_1 = $('.learned_type-1');
-        activationSwitchTwoElements(learned_type_0, learned_type_1);
-    });
+    // $('.learned_type-button').on('click', function() {});
 
-    // $('.add-button').on('click', function() {
-    // });
+    // $('.add-button').on('click', function() {});
 
     //processing of manage content buttons
     $('.manager').on('click', function() {
@@ -70,7 +44,10 @@ $(function() {
     });
 
     //processing of popup forms
-    $('input[name="close"]').on('click', function () {
+    let ajaxUrl = 'PostHandler.php';
+    let successful_popup = $('.success_popup');
+    
+    $('input[name=close]').on('click', function () {
         let popup = $(this).parent('.popup');
         popup.css('opacity', '0');
         setTimeout(() => {
@@ -78,13 +55,24 @@ $(function() {
         }, 200);
     });
 
-    //ДОРАБОТАТЬ УБРАТЬ DISABLED, ЕСЛИ ВСЕ ПОЛЯ ЗАПОЛНЕНЫ
-    //брать родителя, а у него детей(инпуты) и проверять, что они не пусты, если все не пусты, то разблокируй кнопку
-    $('form :input').on('input', function () {
-        console.log(123);
+    $('form input, form textarea').on('input', function () {
+        let popup = $(this).parents('.popup');
+        let fields = popup.find($('input[type=text], textarea'));
+        let fullness = true;
+        for (let field of fields) {
+            if (field.value === '') {
+                fullness &&= false;
+            }
+        }
+        let submit_button = popup.find($('input[type=submit]'));
+        if (fullness) {
+            submit_button.prop('disabled', false);
+        } else {
+            submit_button.prop('disabled', true);
+        }
     });
 
-    function serializeToDcitionary(text) {
+    function serializeToDictionary(text) {
         let items = text.split('&');
         let dictionary = {};
         for (let item of items) {
@@ -93,15 +81,35 @@ $(function() {
         }
         return dictionary;
     }
-
-    $('.add-language_popup').on('submit', function () {
-        let ajaxUrl = 'PostHandler.php';
-        let formData = $(this).serialize();
-        let dictFormData = serializeToDcitionary(formData);
-        let data = {'addLanguage': dictFormData};
+    
+    function sendPostRequest(data, from) {
         $.post(ajaxUrl, data, function(response) {
             console.log(response);
+            from.trigger('reset');
+            let submit_button = from.find($('input[type=submit]'));
+            submit_button.prop('disabled', true);
+
+            successful_popup.css('display', 'block');
+            setTimeout(() => {
+                successful_popup.css('opacity', '1');
+            }, 1);
+
+            setTimeout(() => {
+                successful_popup.css('opacity', '0');
+                setTimeout(() => {
+                    successful_popup.css('display', 'none');
+                }, 200);
+            }, 1500);
         });
-        $(this).trigger('reset');
+    }
+
+    // console.log($('.header-button').data('language-id'));
+
+    $('.add-language_popup').on('submit', function () {
+        let formData = $(this).serialize();
+        let dictFormData = serializeToDictionary(formData);
+        let data = {'addLanguage': dictFormData};
+        let form = $(this);
+        sendPostRequest(data, form);
     });
 });

@@ -10,6 +10,11 @@ class Controller
         $this->mysqli = new mysqli("langvoc", "root", "root", "langvoc");
     }
 
+    public function disconnectDB()
+    {
+        $this->mysqli->close();
+    }
+
     public function initState()
     {
         $result = $this->mysqli->query("INSERT INTO state VALUES (NULL, 0, 0, 0)");
@@ -20,6 +25,26 @@ class Controller
     {
         $result = $this->mysqli->query("SELECT * FROM state");
         return mysqli_fetch_array($result, MYSQLI_ASSOC);
+    }
+
+    public function setLanguageId($languageId)
+    {
+        $this->mysqli->query("UPDATE state SET language_id = ".$languageId);
+    }
+
+    public function setTranslationId($translationId)
+    {
+        $this->mysqli->query("UPDATE state SET transaction_id = ".$translationId);
+    }
+
+    public function setContentType($contentType)
+    {
+        $this->mysqli->query("UPDATE state SET content_type = ".$contentType);
+    }
+
+    public function setLearnedType($learnedType)
+    {
+        $this->mysqli->query("UPDATE state SET learned_tye = ".$learnedType);
     }
 
     public function addLanguage($languageName)
@@ -34,20 +59,17 @@ class Controller
 
     public function switchLanguage($languageId)
     {
-        $this->mysqli->query("DELETE FROM languages WHERE id = ".$languageId);
+//        $this->mysqli->query("DELETE FROM languages WHERE id = ".$languageId);
     }
 
     public function getLanguages()
     {
-        $result = $this->mysqli->query("SELECT * FROM languages");
-        return $result;
-//        $language_ids = [];
-//        $language_names = [];
-//        while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC))
-//        {
-//            $language_ids[] = $row['id'];
-//            $language_names[] = $row['name'];
-//        }
-//        return [$language_ids, $language_names];
+        return $this->mysqli->query("SELECT * FROM languages");
+    }
+
+    public function getLanguageById($languageId)
+    {
+        $result = $this->mysqli->query("SELECT * FROM languages WHERE id = ".$languageId);
+        return mysqli_fetch_array($result, MYSQLI_ASSOC);
     }
 }

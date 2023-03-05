@@ -3,7 +3,7 @@ require_once('Controller.php');
 
 const TO_RUSSIAN = 0;
 const WORDS = 0;
-const LEARNED = 0;
+const UNLEARNED = 0;
 
 $controller = new Controller;
 $controller->connectDB();
@@ -12,11 +12,18 @@ if (empty($state))
 {
     $controller->initState();
 }
-//$controller->addLanguage("English");
 //$controller->deleteLanguage(3);
 $languages = $controller->getLanguages();
-//print_r($languages)
-//print_r($state)
+//нужно взять первый, чтобы в выпадающий список он не попал
+$first_language = mysqli_fetch_array($languages, MYSQLI_ASSOC);
+if (empty($state->language_id)) {
+    $controller->setLanguageId($first_language['id']);
+    $selected_language = $first_language;
+} else {
+    $selected_language = $controller->getLanguageById($state['language_id']);
+}
+//print_r($languages);
+//print_r($state);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -34,37 +41,48 @@ $languages = $controller->getLanguages();
             <header>
                 <div class="language-button-block">
                     <?php if ($languages->num_rows != 0): ?>
-                        <button class="header-button language-button">English</button>
+                        <button class="header-button language-button" data-language-id="<?= $selected_language['id'] ?>"><?= $selected_language['name'] ?></button>
                         <div class="other_languages">
-                            <button class="language-button">Russian</button>
+                            <?php while ($language = mysqli_fetch_array($languages, MYSQLI_ASSOC)): ?>
+                                <button class="language-button" data-language-id="<?= $language['id'] ?>"><?= $language['name'] ?></button>
+                            <?php endwhile; ?>
                             <button id="addLanguage" class="language-button">Add language</button>
                         </div>
                     <?php else: ?>
                         <button id="addLanguage" class="header-button language-button">Add language</button>
                     <?php endif; ?>
                 </div>
-                <button class="header-button translation_type-button">
-                    <span class="translation_type translation_type-0 active">
-                        <span>English</span>
-                        <span>to</span>
-                        <span>Russian</span>
-                    </span>
-                    <span class="translation_type translation_type-1">
-                        <span>Russian</span>
-                        <span>to</span>
-                        <span>English</span>
-                    </span>
+                <button class="header-button translation_type-button" data-translation-type="<?= $state['translation_type'] ?>">
+                    <?php if ($state['translation_type'] == TO_RUSSIAN): ?>
+                        <span class="translation_type">
+                            <span><?= $selected_language['name'] ?></span>
+                            <span>to</span>
+                            <span>Russian</span>
+                        </span>
+                    <?php else: ?>
+                        <span class="translation_type">
+                            <span>Russian</span>
+                            <span>to</span>
+                            <span><?= $selected_language['name'] ?></span>
+                        </span>
+                    <?php endif; ?>
                 </button>
                 <button class="header-button random-button">
                     <span class="random">Random</span>
                 </button>
-                <button class="header-button content_type-button">
-                    <span class="content_type content_type-0 active">Words</span>
-                    <span class="content_type content_type-1">Stable expressions</span>
+                <button class="header-button content_type-button" data-content-type="<?= $state['content_type'] ?>">
+                    <?php if ($state['content_type'] == WORDS): ?>
+                        <span class="content_type">Words</span>
+                    <?php else: ?>
+                        <span class="content_type">Stable expressions</span>
+                    <?php endif; ?>
                 </button>
-                <button class="header-button learned_type-button">
-                    <span class="learned_type learned_type-0 active">Unlearned</span>
-                    <span class="learned_type learned_type-1">Learned</span>
+                <button class="header-button learned_type-button" data-learned-type="<?= $state['learned_type'] ?>">
+                    <?php if ($state['learned_type'] == UNLEARNED): ?>
+                        <span class="learned_type">Unlearned</span>
+                    <?php else: ?>
+                        <span class="learned_type">Learned</span>
+                    <?php endif; ?>
                 </button>
                 <button class="header-button add-button">
                     Add
@@ -259,11 +277,14 @@ $languages = $controller->getLanguages();
             </div>
         </div>
     </div>
+    <div class="success_popup">
+        Successful request
+    </div>
     <form class="add-language_popup popup" action="" method="post" onsubmit="return false;">
         <input type="button" name="close">
         <label>
             <span>Language</span>
-            <input type="text" name="word_name">
+            <input type="text" name="language_name" autocomplete="off">
         </label>
         <input type="submit" value="add" disabled>
     </form>
@@ -272,11 +293,11 @@ $languages = $controller->getLanguages();
             <input type="button" name="close">
             <label>
                 <span>Word</span>
-                <input type="text" name="word_name">
+                <input type="text" name="word_name" autocomplete="off">
             </label>
             <label>
                 <span>Translation</span>
-                <input type="text" name="word_translation">
+                <input type="text" name="word_translation" autocomplete="off">
             </label>
             <input type="submit" value="add" disabled>
         </form>
@@ -284,11 +305,11 @@ $languages = $controller->getLanguages();
             <input type="button" name="close">
             <label>
                 <span>Word</span>
-                <input type="text" name="word_name">
+                <input type="text" name="word_name" autocomplete="off">
             </label>
             <label>
                 <span>Translation</span>
-                <input type="text" name="word_translation">
+                <input type="text" name="word_translation" autocomplete="off">
             </label>
             <input type="submit" value="change" disabled>
         </form>
