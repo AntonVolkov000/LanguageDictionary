@@ -12,18 +12,18 @@ if (empty($state))
 {
     $controller->initState();
 }
-//$controller->deleteLanguage(3);
 $languages = $controller->getLanguages();
 //нужно взять первый, чтобы в выпадающий список он не попал
-$first_language = mysqli_fetch_array($languages, MYSQLI_ASSOC);
-if (empty($state->language_id)) {
+if (empty($state['language_id'])) {
+    $first_language = mysqli_fetch_array($languages, MYSQLI_ASSOC);
     $controller->setLanguageId($first_language['id']);
     $selected_language = $first_language;
 } else {
     $selected_language = $controller->getLanguageById($state['language_id']);
 }
-//print_r($languages);
+print_r($first_language);
 //print_r($state);
+$controller->disconnectDB();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -42,10 +42,12 @@ if (empty($state->language_id)) {
                 <div class="language-button-block">
                     <?php if ($languages->num_rows != 0): ?>
                         <button class="header-button language-button" data-language-id="<?= $selected_language['id'] ?>"><?= $selected_language['name'] ?></button>
-                        <div class="other_languages">
-                            <?php while ($language = mysqli_fetch_array($languages, MYSQLI_ASSOC)): ?>
-                                <button class="language-button" data-language-id="<?= $language['id'] ?>"><?= $language['name'] ?></button>
-                            <?php endwhile; ?>
+                        <div class="other-languages">
+                                <?php while ($language = mysqli_fetch_array($languages, MYSQLI_ASSOC)): ?>
+                                    <?php if ($language['name'] != $selected_language['name']): ?>
+                                            <button class="language-button other-language" data-language-id="<?= $language['id'] ?>"><?= $language['name'] ?></button>
+                                    <?php endif; ?>
+                                <?php endwhile; ?>
                             <button id="addLanguage" class="language-button">Add language</button>
                         </div>
                     <?php else: ?>
@@ -70,6 +72,14 @@ if (empty($state->language_id)) {
                 <button class="header-button random-button">
                     <span class="random">Random</span>
                 </button>
+                <div class="small-button-container">
+                    <button class="header-button add-button small_header-button">
+                        Add
+                    </button>
+                    <button class="header-button check-button small_header-button">
+                        Check
+                    </button>
+                </div>
                 <button class="header-button content_type-button" data-content-type="<?= $state['content_type'] ?>">
                     <?php if ($state['content_type'] == WORDS): ?>
                         <span class="content_type">Words</span>
@@ -84,9 +94,6 @@ if (empty($state->language_id)) {
                         <span class="learned_type">Learned</span>
                     <?php endif; ?>
                 </button>
-                <button class="header-button add-button">
-                    Add
-                </button>
             </header>
             <div class="main">
                 <div class="content-button-container">
@@ -95,7 +102,6 @@ if (empty($state->language_id)) {
                     </button>
                 </div>
                 <div class="content">
-
                     <div class="column">
                         <div class="text_name">11111</div>
                         <div class="text_translation">22222</div>
@@ -123,150 +129,6 @@ if (empty($state->language_id)) {
                                 <button class="delete">delete</button>
                             </div>
                         </div>
-                    </div>
-                    <div class="column">
-                        <div class="text_name">11111</div>
-                        <div class="text_translation">22222</div>
-                    </div>
-                    <div class="column">
-                        <div class="text_name">11111</div>
-                        <div class="text_translation">22222</div>
-                    </div>
-                    <div class="column">
-                        <div class="text_name">11111</div>
-                        <div class="text_translation">22222</div>
-                    </div>
-                    <div class="column">
-                        <div class="text_name">11111</div>
-                        <div class="text_translation">22222</div>
-                    </div>
-                    <div class="column">
-                        <div class="text_name">11111</div>
-                        <div class="text_translation">22222</div>
-                    </div>
-                    <div class="column">
-                        <div class="text_name">11111</div>
-                        <div class="text_translation">22222</div>
-                    </div>
-                    <div class="column">
-                        <div class="text_name">11111</div>
-                        <div class="text_translation">22222</div>
-                    </div>
-                    <div class="column">
-                        <div class="text_name">11111</div>
-                        <div class="text_translation">22222</div>
-                    </div>
-                    <div class="column">
-                        <div class="text_name">11111</div>
-                        <div class="text_translation">22222</div>
-                    </div>
-                    <div class="column">
-                        <div class="text_name">11111</div>
-                        <div class="text_translation">22222</div>
-                    </div>
-                    <div class="column">
-                        <div class="text_name">11111</div>
-                        <div class="text_translation">22222</div>
-                    </div>
-                    <div class="column">
-                        <div class="text_name">11111</div>
-                        <div class="text_translation">22222</div>
-                    </div>
-                    <div class="column">
-                        <div class="text_name">11111</div>
-                        <div class="text_translation">22222</div>
-                    </div>
-                    <div class="column">
-                        <div class="text_name">11111</div>
-                        <div class="text_translation">22222</div>
-                    </div>
-                    <div class="column">
-                        <div class="text_name">11111</div>
-                        <div class="text_translation">22222</div>
-                    </div>
-                    <div class="column">
-                        <div class="text_name">11111</div>
-                        <div class="text_translation">22222</div>
-                    </div>
-                    <div class="column">
-                        <div class="text_name">11111</div>
-                        <div class="text_translation">22222</div>
-                    </div>
-                    <div class="column">
-                        <div class="text_name">11111</div>
-                        <div class="text_translation">22222</div>
-                    </div>
-                    <div class="column">
-                        <div class="text_name">11111</div>
-                        <div class="text_translation">22222</div>
-                    </div>
-                    <div class="column">
-                        <div class="text_name">11111</div>
-                        <div class="text_translation">22222</div>
-                    </div>
-                    <div class="column">
-                        <div class="text_name">11111</div>
-                        <div class="text_translation">22222</div>
-                    </div>
-                    <div class="column">
-                        <div class="text_name">11111</div>
-                        <div class="text_translation">22222</div>
-                    </div>
-                    <div class="column">
-                        <div class="text_name">11111</div>
-                        <div class="text_translation">22222</div>
-                    </div>
-                    <div class="column">
-                        <div class="text_name">11111</div>
-                        <div class="text_translation">22222</div>
-                    </div>
-                    <div class="column">
-                        <div class="text_name">11111</div>
-                        <div class="text_translation">22222</div>
-                    </div>
-                    <div class="column">
-                        <div class="text_name">11111</div>
-                        <div class="text_translation">22222</div>
-                    </div>
-                    <div class="column">
-                        <div class="text_name">11111</div>
-                        <div class="text_translation">22222</div>
-                    </div>
-                    <div class="column">
-                        <div class="text_name">11111</div>
-                        <div class="text_translation">22222</div>
-                    </div>
-                    <div class="column">
-                        <div class="text_name">11111</div>
-                        <div class="text_translation">22222</div>
-                    </div>
-                    <div class="column">
-                        <div class="text_name">11111</div>
-                        <div class="text_translation">22222</div>
-                    </div>
-                    <div class="column">
-                        <div class="text_name">11111</div>
-                        <div class="text_translation">22222</div>
-                    </div>
-                    <div class="column">
-                        <div class="text_name">11111</div>
-                        <div class="text_translation">22222</div>
-                    </div>
-                    <div class="column">
-                        <div class="text_name">11111</div>
-                        <div class="text_translation">22222</div>
-                    </div>
-                    <div class="column">
-                        <div class="text_name">11111</div>
-                        <div class="text_translation">22222</div>
-                    </div>
-                    <div class="column">
-                        <div class="text_name">11111</div>
-                        <div class="text_translation">22222</div>
-                    </div>
-                    <div class="column">
-                        <div class="text_name">11111</div>
-                        <div class="text_translation">22222</div>
                     </div>
                 </div>
                 <div class="content-button-container">
@@ -277,67 +139,74 @@ if (empty($state->language_id)) {
             </div>
         </div>
     </div>
-    <div class="success_popup">
-        Successful request
+    <div class="popups">
+        <div class="success_popup">
+            Successful request
+        </div>
+        <div class="sure_popup">
+            Are you suure?
+            <button class="yes-button">Yes</button>
+            <button class="no-button">No</button>
+        </div>
+        <form class="add-language_popup popup" action="" method="post" onsubmit="return false;">
+            <input type="button" name="close">
+            <label>
+                <span>Language</span>
+                <input type="text" name="language_name" autocomplete="off">
+            </label>
+            <input type="submit" value="add" disabled>
+        </form>
+        <?php if ($state['content_type'] == WORDS): ?>
+            <form class="add-word_popup popup" action="" method="post" onsubmit="return false;">
+                <input type="button" name="close">
+                <label>
+                    <span>Word</span>
+                    <input type="text" name="word_name" autocomplete="off">
+                </label>
+                <label>
+                    <span>Translation</span>
+                    <input type="text" name="word_translation" autocomplete="off">
+                </label>
+                <input type="submit" value="add" disabled>
+            </form>
+            <form class="change-word_popup popup" action="" method="post" onsubmit="return false;">
+                <input type="button" name="close">
+                <label>
+                    <span>Word</span>
+                    <input type="text" name="word_name" autocomplete="off">
+                </label>
+                <label>
+                    <span>Translation</span>
+                    <input type="text" name="word_translation" autocomplete="off">
+                </label>
+                <input type="submit" value="change" disabled>
+            </form>
+        <?php else: ?>
+            <form class="add-stable_expression_popup popup" action="" method="post" onsubmit="return false;">
+                <input type="button" name="close">
+                <label>
+                    <span>Stable expression</span>
+                    <textarea name="stable_expression_name"></textarea>
+                </label>
+                <label>
+                    <span>Translation</span>
+                    <textarea name="stable_expression_translation"></textarea>
+                </label>
+                <input type="submit" value="add" disabled>
+            </form>
+            <form class="change-stable_expressions_popup popup" action="" method="post" onsubmit="return false;">
+                <input type="button" name="close">
+                <label>
+                    <span>Stable expression</span>
+                    <textarea name="stable_expression_name"></textarea>
+                </label>
+                <label>
+                    <span>Translation</span>
+                    <textarea name="stable_expression_translation"></textarea>
+                </label>
+                <input type="submit" value="change" disabled>
+            </form>
+        <?php endif; ?>
     </div>
-    <form class="add-language_popup popup" action="" method="post" onsubmit="return false;">
-        <input type="button" name="close">
-        <label>
-            <span>Language</span>
-            <input type="text" name="language_name" autocomplete="off">
-        </label>
-        <input type="submit" value="add" disabled>
-    </form>
-    <?php if ($state['content_type'] == WORDS): ?>
-        <form class="add-word_popup popup" action="" method="post" onsubmit="return false;">
-            <input type="button" name="close">
-            <label>
-                <span>Word</span>
-                <input type="text" name="word_name" autocomplete="off">
-            </label>
-            <label>
-                <span>Translation</span>
-                <input type="text" name="word_translation" autocomplete="off">
-            </label>
-            <input type="submit" value="add" disabled>
-        </form>
-        <form class="change-word_popup popup" action="" method="post" onsubmit="return false;">
-            <input type="button" name="close">
-            <label>
-                <span>Word</span>
-                <input type="text" name="word_name" autocomplete="off">
-            </label>
-            <label>
-                <span>Translation</span>
-                <input type="text" name="word_translation" autocomplete="off">
-            </label>
-            <input type="submit" value="change" disabled>
-        </form>
-    <?php else: ?>
-        <form class="add-stable_expression_popup popup" action="" method="post" onsubmit="return false;">
-            <input type="button" name="close">
-            <label>
-                <span>Stable expression</span>
-                <textarea name="stable_expression_name"></textarea>
-            </label>
-            <label>
-                <span>Translation</span>
-                <textarea name="stable_expression_translation"></textarea>
-            </label>
-            <input type="submit" value="add" disabled>
-        </form>
-        <form class="change-stable_expressions_popup popup" action="" method="post" onsubmit="return false;">
-            <input type="button" name="close">
-            <label>
-                <span>Stable expression</span>
-                <textarea name="stable_expression_name"></textarea>
-            </label>
-            <label>
-                <span>Translation</span>
-                <textarea name="stable_expression_translation"></textarea>
-            </label>
-            <input type="submit" value="change" disabled>
-        </form>
-    <?php endif; ?>
 </body>
 </html>

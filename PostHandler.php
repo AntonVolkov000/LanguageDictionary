@@ -2,17 +2,19 @@
 
 require_once('Controller.php');
 
+$controller = new Controller;
+$controller->connectDB();
+
 print_r($_POST);
 switch (key($_POST)) {
     case 'addLanguage':
-        $language_name = $_POST['addLanguage']['language_name'];
-//        addLanguage($language_name);
+        $languageName = $_POST['addLanguage']['language_name'];
+//        $controller->addLanguage($languageName);
+        break;
+    case 'switchLanguage':
+        $languageId = $_POST['switchLanguage']['languageId'];
+        $controller->switchLanguage($languageId);
         break;
 }
 
-function addLanguage($language_name) {
-    $controller = new Controller;
-    $controller->connectDB();
-    $controller->addLanguage($language_name);
-    $controller->disconnectDB();
-}
+$controller->disconnectDB();
