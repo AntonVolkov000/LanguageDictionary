@@ -57,6 +57,11 @@ class Controller
         $this->mysqli->query("DELETE FROM languages WHERE id = ".$languageId);
     }
 
+    public function renameLanguage($languageId, $languageName)
+    {
+        $this->mysqli->query("UPDATE languages SET name = '".$languageName."' WHERE id = ".$languageId);
+    }
+
     public function switchLanguage($languageId)
     {
         $this->mysqli->query("UPDATE state SET language_id = ".$languageId);

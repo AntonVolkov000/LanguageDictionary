@@ -21,7 +21,6 @@ if (empty($state['language_id'])) {
 } else {
     $selected_language = $controller->getLanguageById($state['language_id']);
 }
-print_r($first_language);
 //print_r($state);
 $controller->disconnectDB();
 ?>
@@ -45,7 +44,17 @@ $controller->disconnectDB();
                         <div class="other-languages">
                                 <?php while ($language = mysqli_fetch_array($languages, MYSQLI_ASSOC)): ?>
                                     <?php if ($language['name'] != $selected_language['name']): ?>
-                                            <button class="language-button other-language" data-language-id="<?= $language['id'] ?>"><?= $language['name'] ?></button>
+                                        <div class="other-language">
+                                            <button class="language-button" data-language-id="<?= $language['id'] ?>"><?= $language['name'] ?></button>
+                                            <div class="language-manage-buttons">
+                                                <button class="delete-language language-manage-button">
+                                                    <img src="images/cross.png" alt="cross">
+                                                </button>
+                                                <button class="rename-language language-manage-button">
+                                                    <img src="images/pencil.png" alt="pencil">
+                                                </button>
+                                            </div>
+                                        </div>
                                     <?php endif; ?>
                                 <?php endwhile; ?>
                             <button id="addLanguage" class="language-button">Add language</button>
@@ -144,15 +153,25 @@ $controller->disconnectDB();
             Successful request
         </div>
         <div class="sure_popup">
-            Are you suure?
-            <button class="yes-button">Yes</button>
-            <button class="no-button">No</button>
+            Are you sure?
+            <div class="sure_popup_buttons">
+                <button class="yes-button">Yes</button>
+                <button class="no-button">No</button>
+            </div>
         </div>
+        <form class="rename-language_popup popup" action="" method="post" onsubmit="return false;">
+            <input type="button" name="close">
+            <label>
+                <span>Language</span>
+                <input type="text" name="languageName" autocomplete="off">
+            </label>
+            <input type="submit" value="rename" disabled>
+        </form>
         <form class="add-language_popup popup" action="" method="post" onsubmit="return false;">
             <input type="button" name="close">
             <label>
                 <span>Language</span>
-                <input type="text" name="language_name" autocomplete="off">
+                <input type="text" name="languageName" autocomplete="off">
             </label>
             <input type="submit" value="add" disabled>
         </form>
@@ -161,11 +180,11 @@ $controller->disconnectDB();
                 <input type="button" name="close">
                 <label>
                     <span>Word</span>
-                    <input type="text" name="word_name" autocomplete="off">
+                    <input type="text" name="wordName" autocomplete="off">
                 </label>
                 <label>
                     <span>Translation</span>
-                    <input type="text" name="word_translation" autocomplete="off">
+                    <input type="text" name="wordTranslation" autocomplete="off">
                 </label>
                 <input type="submit" value="add" disabled>
             </form>
@@ -173,11 +192,11 @@ $controller->disconnectDB();
                 <input type="button" name="close">
                 <label>
                     <span>Word</span>
-                    <input type="text" name="word_name" autocomplete="off">
+                    <input type="text" name="wordName" autocomplete="off">
                 </label>
                 <label>
                     <span>Translation</span>
-                    <input type="text" name="word_translation" autocomplete="off">
+                    <input type="text" name="wordTranslation" autocomplete="off">
                 </label>
                 <input type="submit" value="change" disabled>
             </form>
@@ -186,11 +205,11 @@ $controller->disconnectDB();
                 <input type="button" name="close">
                 <label>
                     <span>Stable expression</span>
-                    <textarea name="stable_expression_name"></textarea>
+                    <textarea name="stableExpressionName"></textarea>
                 </label>
                 <label>
                     <span>Translation</span>
-                    <textarea name="stable_expression_translation"></textarea>
+                    <textarea name="stableExpressionTranslation"></textarea>
                 </label>
                 <input type="submit" value="add" disabled>
             </form>
@@ -198,11 +217,11 @@ $controller->disconnectDB();
                 <input type="button" name="close">
                 <label>
                     <span>Stable expression</span>
-                    <textarea name="stable_expression_name"></textarea>
+                    <textarea name="stableExpressionName"></textarea>
                 </label>
                 <label>
                     <span>Translation</span>
-                    <textarea name="stable_expression_translation"></textarea>
+                    <textarea name="stableExpressionTranslation"></textarea>
                 </label>
                 <input type="submit" value="change" disabled>
             </form>
